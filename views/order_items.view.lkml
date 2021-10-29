@@ -110,16 +110,19 @@ view: order_items {
 
   measure: total_sale_price {
     type: sum
+    value_format: "$#.00;($#.00)"
     sql: ${sale_price} ;;
   }
 
   measure: average_sale_price {
     type: average
+    value_format: "$#.00;($#.00)"
     sql: ${sale_price} ;;
   }
 
   measure: cumulative_total_sales {
     type: running_total
+    value_format: "$#.00;($#.00)"
     sql: ${total_sale_price} ;;
   }
 
