@@ -67,7 +67,7 @@ view: order_items {
     sql: ${TABLE}."RETURNED_AT" ;;
   }
 
-  dimension: isreturned {
+  dimension: is_returned {
     type: yesno
     description: "Is the order returned?"
     sql: not ${returned_date} is null  ;;
