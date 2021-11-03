@@ -103,27 +103,101 @@ view: order_items {
     sql: ${TABLE}."USER_ID" ;;
   }
 
+  dimension: is_completed {
+    description: "Is order complete?"
+    type: yesno
+    sql: UPPER(${status}) NOT IN ('CANCELLED', 'RETURNED') ;;
+  }
+
+  # dimension: is_returned {
+  #   description: "Is order returned?"
+  #   type: yesno
+  #   sql: upper(${status}) IN ('RETURNED') ;;
+  # }
+
   measure: count {
     type: count
     drill_fields: [detail*]
   }
 
   measure: total_sale_price {
+    description: "Total sales from items sold"
     type: sum
     value_format: "$#.00;($#.00)"
     sql: ${sale_price} ;;
   }
 
   measure: average_sale_price {
+    description: "Average sale price of items sold"
     type: average
     value_format: "$#.00;($#.00)"
     sql: ${sale_price} ;;
   }
 
   measure: cumulative_total_sales {
+    description: "Cumulative total sales from items sold(also known as running total)"
     type: running_total
     value_format: "$#.00;($#.00)"
     sql: ${total_sale_price} ;;
+  }
+
+  measure: total_gross_revenue {
+    description: "Total revenue from completed sales (cancelled and returned orders excluded)"
+    type: sum
+    value_format_name: usd
+    filters: [is_completed: "Yes"]
+    sql: ${sale_price} ;;
+  }
+
+  measure: total_gross_margin_amount {
+    description: "Total difference between the total revenue from completed sales and the cost of the goods that were sold"
+    type: sum
+    value_format_name: usd
+    filters: [is_completed:"Yes"]
+    sql: ${sale_price}-${inventory_items.cost} ;;
+  }
+
+  measure: gross_margin_percentage {
+    description: "Total Gross Margin Amount / Total Gross Revenue"
+    label: "Gross Margin %"
+    type: number
+    value_format_name:  percent_2
+    sql: ${total_gross_margin_amount}/nullif(${total_gross_revenue},0) ;;
+  }
+
+  measure: count_returned {
+    description: "Number of items that were returned by dissatisfied customers"
+    label: "Number of Items Returned"
+    type: count
+    filters: [is_returned: "Yes"]
+  }
+
+  measure: item_return_rate {
+    description: "Number of users who have returned an item at some point"
+    type: number
+    value_format_name: percent_2
+    sql: ${count_returned}/nullif(${count},0) ;;
+  }
+
+  measure: customers_with_returned_items{
+    description: "Number of users who have returned an item at some point"
+    type: count_distinct
+    filters: [is_returned: "Yes"]
+    sql: ${user_id} ;;
+  }
+
+  measure:  customer_count{
+    description: "Total number of customers"
+    label: "Total Number of Customers"
+    type: count_distinct
+    sql: ${user_id} ;;
+  }
+
+  measure: customers_with_returns_rate {
+    description: "Number of Customer Returning Items / total number of customers"
+    label: "% of Users with Returns"
+    type: number
+    sql: ${customers_with_returned_items}/nullif(${users.customer_count},0) ;;
   }
 
   # ----- Sets of fields for drilling ------

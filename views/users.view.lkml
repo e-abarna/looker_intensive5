@@ -101,4 +101,10 @@ view: users {
     type: count
     drill_fields: [id, last_name, first_name, events.count, order_items.count]
   }
+
+  measure: customer_count {
+    description: "Total number of customers"
+    type: count_distinct
+    sql: ${id} ;;
+  }
 }
