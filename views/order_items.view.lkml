@@ -117,7 +117,7 @@ view: order_items {
 
   measure: count {
     type: count
-    drill_fields: [detail*]
+    drill_fields: [detail_for_customer_explore*]
   }
 
   measure: total_sale_price {
@@ -186,12 +186,12 @@ view: order_items {
     sql: ${user_id} ;;
   }
 
-  measure:  customer_count{
-    description: "Total number of customers"
-    label: "Total Number of Customers"
-    type: count_distinct
-    sql: ${user_id} ;;
-  }
+  # measure:  customer_count{
+  #   description: "Total number of customers"
+  #   label: "Total Number of Customers"
+  #   type: count_distinct
+  #   sql: ${user_id} ;;
+  # }
 
   measure: customers_with_returns_rate {
     description: "Number of Customer Returning Items / total number of customers"
@@ -209,14 +209,24 @@ view: order_items {
   }
 
   # ----- Sets of fields for drilling ------
-  set: detail {
-    fields: [
-      id,
-      inventory_items.product_name,
-      inventory_items.id,
-      users.last_name,
-      users.id,
-      users.first_name
-    ]
+  set: detail_for_customer_explore {
+      fields: [
+        id,
+        inventory_item_id,
+        order_id,
+        sale_price,
+        status,
+        user_id,
+        is_returned,
+        is_completed,
+        total_sale_price,
+        average_sale_price,
+        cumulative_total_sales,
+        count_returned,
+        item_return_rate,
+        customers_with_returned_items,
+        customers_with_returns_rate,
+        average_spend_pr_customer
+      ]
   }
 }
