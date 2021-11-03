@@ -200,6 +200,14 @@ view: order_items {
     sql: ${customers_with_returned_items}/nullif(${users.customer_count},0) ;;
   }
 
+  measure: average_spend_pr_customer {
+    description: "Total Sale Price / total number of customers"
+    label: "Average Spend per Customer"
+    type: number
+    value_format_name: usd
+    sql: ${total_sale_price}/nullif(${users.customer_count},0) ;;
+  }
+
   # ----- Sets of fields for drilling ------
   set: detail {
     fields: [
