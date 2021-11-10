@@ -5,6 +5,7 @@ view: users {
 
   dimension: id {
     primary_key: yes
+    hidden: yes
     type: number
     sql: ${TABLE}."ID" ;;
   }
@@ -97,10 +98,10 @@ view: users {
     sql: ${TABLE}."ZIP" ;;
   }
 
-  measure: count {
-    type: count
-    drill_fields: [id, last_name, first_name, events.count, order_items.count]
-  }
+  # measure: count {
+  #   type: count
+  #   drill_fields: [id, last_name, first_name, events.count, order_items.count]
+  # }
 
   measure: customer_count {
     description: "Total number of customers"

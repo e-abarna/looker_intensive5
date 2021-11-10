@@ -5,6 +5,7 @@ view: order_items {
 
   dimension: id {
     primary_key: yes
+    hidden: yes
     type: number
     sql: ${TABLE}."ID" ;;
   }
@@ -44,11 +45,12 @@ view: order_items {
 
   dimension: inventory_item_id {
     type: number
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}."INVENTORY_ITEM_ID" ;;
   }
 
   dimension: order_id {
+    hidden:  yes
     type: number
     sql: ${TABLE}."ORDER_ID" ;;
   }
@@ -99,7 +101,7 @@ view: order_items {
 
   dimension: user_id {
     type: number
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}."USER_ID" ;;
   }
 
@@ -168,12 +170,14 @@ view: order_items {
   measure: count_returned {
     description: "Number of items that were returned by dissatisfied customers"
     label: "Number of Items Returned"
+    group_label: "Returns"
     type: count
     filters: [is_returned: "Yes"]
   }
 
   measure: item_return_rate {
     description: "Number of users who have returned an item at some point"
+    group_label: "Returns"
     type: number
     value_format_name: percent_2
     sql: ${count_returned}/nullif(${count},0) ;;
@@ -181,6 +185,7 @@ view: order_items {
 
   measure: customers_with_returned_items{
     description: "Number of users who have returned an item at some point"
+    group_label: "Returns"
     type: count_distinct
     filters: [is_returned: "Yes"]
     sql: ${user_id} ;;
@@ -196,6 +201,7 @@ view: order_items {
   measure: customers_with_returns_rate {
     description: "Number of Customer Returning Items / total number of customers"
     label: "% of Users with Returns"
+    group_label: "Returns"
     type: number
     sql: ${customers_with_returned_items}/nullif(${users.customer_count},0) ;;
   }
