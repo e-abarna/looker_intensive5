@@ -105,7 +105,7 @@ view: users {
 
   measure: customer_count {
     description: "Total number of customers"
-    type: count_distinct
-    sql: ${id} ;;
+    type: count
+  #  sql: ${id} ;;
   }
 }
